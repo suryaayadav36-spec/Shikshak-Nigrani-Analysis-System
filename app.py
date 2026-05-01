@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 import pandas as pd
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, Response, render_template, request, redirect, url_for, flash, session
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET", "DropoutRiskSecret2026")
@@ -193,6 +193,31 @@ def build_result(student_name, data, performance_score, risk_level, probability,
     }
 
 
+def build_report_text(result):
+    suggestions = "\n".join(f"- {suggestion}" for suggestion in result["suggestions"])
+    return f"""Shikshak Nigrani & Analysis System
+Student Performance Report
+
+Student Name: {result["name"]}
+Risk Level: {result["risk_level"]} Risk
+Risk Probability: {result["risk_probability"]}%
+Performance Score: {result["performance_score"]} / 100
+
+Input Metrics
+- Attendance: {result["attendance"]}%
+- Internal Marks: {result["marks"]}%
+- Assignment Completion: {result["assignments"]}%
+- Backlogs: {result["backlogs"]}
+- Study Hours per Week: {result["study_hours"]}
+
+Model Explanation
+{result["explanation"]}
+
+Improvement Suggestions
+{suggestions}
+"""
+
+
 @app.route("/")
 def home():
     summary = get_dataset_summary()
@@ -256,6 +281,21 @@ def dashboard():
     return render_template("dashboard.html", result=result, history=history)
 
 
+@app.route("/download-report")
+def download_report():
+    result = session.get("latest_result")
+    if not result:
+        flash("Generate a prediction before downloading a report.", "warning")
+        return redirect(url_for("add_student"))
+
+    filename = f"{result['name'].replace(' ', '_').lower()}_risk_report.txt"
+    return Response(
+        build_report_text(result),
+        mimetype="text/plain",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
+
+
 if __name__ == "__main__":
     load_model()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5001, debug=True)

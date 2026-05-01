@@ -113,7 +113,8 @@ a {
 .form-panel,
 .dashboard-grid,
 .insights-section,
-.empty-state-card {
+.empty-state-card,
+.model-section {
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius);
@@ -272,6 +273,52 @@ a {
 
 .page-header {
   padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.model-section {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.model-section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 14px;
+}
+
+.model-section p {
+  color: var(--text-muted);
+  line-height: 1.8;
+  max-width: 680px;
+}
+
+.model-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.model-points div {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.model-points strong {
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.model-points span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .form-panel {
@@ -549,7 +596,7 @@ input:focus {
   min-height: 310px;
 }
 
-..chart-card {
+.chart-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -589,6 +636,32 @@ input:focus {
 
 .history-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.04);
+}
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 76px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+
+.risk-low {
+  background: rgba(46, 204, 113, 0.16);
+  color: #79e6a3;
+}
+
+.risk-medium {
+  background: rgba(241, 196, 15, 0.16);
+  color: #ffe08a;
+}
+
+.risk-high {
+  background: rgba(231, 76, 60, 0.16);
+  color: #ff9a8f;
 }
 
 .empty-history {
@@ -668,7 +741,8 @@ input:focus {
   .dashboard-grid,
   .overview-grid,
   .insights-section,
-  .hero-dashboard-grid {
+  .hero-dashboard-grid,
+  .model-section {
     grid-template-columns: 1fr;
   }
   .overview-summary {
@@ -686,5 +760,11 @@ input:focus {
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+  .page-header {
+    flex-direction: column;
+  }
+  .model-points {
+    grid-template-columns: 1fr;
   }
 }

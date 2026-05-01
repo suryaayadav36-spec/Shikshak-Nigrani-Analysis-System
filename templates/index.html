@@ -84,6 +84,22 @@
             <p>Every prediction includes an explanation and student-specific suggestions for improvement.</p>
           </article>
         </section>
+
+        <section class="model-section">
+          <div>
+            <span class="eyebrow">About model</span>
+            <h3>How the prediction works</h3>
+            <p>
+              The system uses a Logistic Regression model trained on a synthetic student dataset. It evaluates five inputs:
+              attendance, internal marks, assignment completion, backlogs, and weekly study hours.
+            </p>
+          </div>
+          <div class="model-points">
+            <div><strong>5</strong><span>Input features</span></div>
+            <div><strong>3</strong><span>Risk levels</span></div>
+            <div><strong>{{ summary.rows }}</strong><span>Training samples</span></div>
+          </div>
+        </section>
       </main>
     </div>
     <script src="/static/script.js"></script>

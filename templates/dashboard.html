@@ -27,6 +27,9 @@
             <h2>Latest student assessment</h2>
             <p>Review the most recent dropout risk analysis and explore improvement suggestions.</p>
           </div>
+          {% if result %}
+          <a class="btn btn-primary" href="/download-report">Download Report</a>
+          {% endif %}
         </section>
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -92,17 +95,17 @@
             <p>Performance score: <strong>{{ result.performance_score }} / 100</strong></p>
             <div class="progress-block">
               <span>Attendance</span>
-              <div class="progress-bar"><div style="width: {{ result.attendance }}%"></div></div>
+              <div class="progress-bar"><div style="--progress: {{ result.attendance }}%"></div></div>
               <small>{{ result.attendance }}%</small>
             </div>
             <div class="progress-block">
               <span>Marks</span>
-              <div class="progress-bar"><div style="width: {{ result.marks }}%"></div></div>
+              <div class="progress-bar"><div style="--progress: {{ result.marks }}%"></div></div>
               <small>{{ result.marks }}%</small>
             </div>
             <div class="progress-block">
               <span>Assignments</span>
-              <div class="progress-bar"><div style="width: {{ result.assignments }}%"></div></div>
+              <div class="progress-bar"><div style="--progress: {{ result.assignments }}%"></div></div>
               <small>{{ result.assignments }}%</small>
             </div>
           </article>
@@ -178,7 +181,7 @@
                   <tr>
                     <td>{{ item.timestamp }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.risk_level }}</td>
+                    <td><span class="risk-badge risk-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td>
                     <td>{{ item.performance_score }}</td>
                     <td>{{ item.attendance }}%</td>
                   </tr>

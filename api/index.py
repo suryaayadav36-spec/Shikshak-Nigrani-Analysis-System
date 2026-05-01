@@ -1,11 +1,12 @@
 import sys
 import os
+from pathlib import Path
 
-# Add parent directory to path so imports work
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add parent directory to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
+# Now import app
 from app import app
 
-# Export app for Vercel
-def handler(request):
-    return app(request.environ, request.start_response)
+# Export for Vercel serverless

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Shikshak Nigrani & Analysis System</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>Shikshak Nigrani & Analysis System</h1>
+          <p>Performance & Risk Dashboard</p>
+        </div>
+        <nav class="nav-menu">
+          <a class="nav-item" href="/">Home</a>
+          <a class="nav-item" href="/add">Add Student</a>
+          <a class="nav-item active" href="/dashboard">Dashboard</a>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <section class="page-header">
+          <div>
+            <span class="eyebrow">Prediction dashboard</span>
+            <h2>Latest student assessment</h2>
+            <p>Review the most recent dropout risk analysis and explore improvement suggestions.</p>
+          </div>
+        </section>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+          <div class="flash-banner flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if result %}
+        <section class="hero-dashboard-grid">
+          <article class="card overview-card">
+            <div class="overview-head">
+              <div>
+                <span class="eyebrow">Student overview</span>
+                <h2>{{ result.name }}</h2>
+              </div>
+              <div class="risk-pill" style="background: {{ result.risk_color }}33; color: {{ result.risk_color }};">
+                {{ result.risk_level }} Risk
+              </div>
+            </div>
+            <div class="overview-summary">
+              <div class="score-ring" style="--score-progress: {{ result.performance_score }}%;">
+                <div>
+                  <strong>{{ result.performance_score }}</strong>
+                  <small>Score</small>
+                </div>
+              </div>
+              <div class="summary-copy">
+                <p>Performance strength is based on attendance, marks, assignments, backlogs, and study hours.</p>
+                <p><strong>Top focus:</strong> Improve attendance and assignment completion to lower risk quickly.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card quick-metrics-card">
+            <h3>Key metrics</h3>
+            <div class="metric-pill-grid">
+              <div class="metric-pill"><span>Attendance</span><strong>{{ result.attendance }}%</strong></div>
+              <div class="metric-pill"><span>Marks</span><strong>{{ result.marks }}%</strong></div>
+              <div class="metric-pill"><span>Assignments</span><strong>{{ result.assignments }}%</strong></div>
+              <div class="metric-pill"><span>Study Hours</span><strong>{{ result.study_hours }}</strong></div>
+              <div class="metric-pill"><span>Backlogs</span><strong>{{ result.backlogs }}</strong></div>
+              <div class="metric-pill"><span>Risk Probability</span><strong>{{ result.risk_probability }}%</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="card risk-card" style="border-color: {{ result.risk_color }}">
+            <h3>Risk Level</h3>
+            <div class="risk-pill" style="background: {{ result.risk_color }}33; color: {{ result.risk_color }};">
+              {{ result.risk_level }} Risk
+            </div>
+            <p>Probability: <strong>{{ result.risk_probability }}%</strong></p>
+            <p>{{ result.explanation }}</p>
+          </article>
+
+          <article class="card summary-card">
+            <h3>{{ result.name }}</h3>
+            <p>Performance score: <strong>{{ result.performance_score }} / 100</strong></p>
+            <div class="progress-block">
+              <span>Attendance</span>
+              <div class="progress-bar"><div style="width: {{ result.attendance }}%"></div></div>
+              <small>{{ result.attendance }}%</small>
+            </div>
+            <div class="progress-block">
+              <span>Marks</span>
+              <div class="progress-bar"><div style="width: {{ result.marks }}%"></div></div>
+              <small>{{ result.marks }}%</small>
+            </div>
+            <div class="progress-block">
+              <span>Assignments</span>
+              <div class="progress-bar"><div style="width: {{ result.assignments }}%"></div></div>
+              <small>{{ result.assignments }}%</small>
+            </div>
+          </article>
+
+          <article class="card metrics-card">
+            <h3>Quick metrics</h3>
+            <div class="metric-row">
+              <div>
+                <span>Backlogs</span>
+                <strong>{{ result.backlogs }}</strong>
+              </div>
+              <div>
+                <span>Study Hours</span>
+                <strong>{{ result.study_hours }}</strong>
+              </div>
+            </div>
+            <div class="metric-row">
+              <div>
+                <span>Risk Probability</span>
+                <strong>{{ result.risk_probability }}%</strong>
+              </div>
+              <div>
+                <span>Performance Grade</span>
+                <strong>{{ "A" if result.performance_score >= 80 else "B" if result.performance_score >= 60 else "C" }}</strong>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="insights-section">
+          <article class="card full-card">
+            <h3>Improvement suggestions</h3>
+            <ul class="suggestions-list">
+              {% for suggestion in result.suggestions %}
+              <li>{{ suggestion }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+          <article class="card full-card chart-card">
+            <div class="chart-group">
+              <div>
+                <h3>Performance profile</h3>
+                <canvas id="performanceChart" width="500" height="280"></canvas>
+              </div>
+              <div>
+                <h3>Risk driver index</h3>
+                <canvas id="riskChart" width="500" height="280"></canvas>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="history-card">
+          <article class="card full-card">
+            <div class="history-header">
+              <h3>Recent predictions</h3>
+              <p>Students who have checked their score recently.</p>
+            </div>
+            {% if history %}
+            <div class="table-wrapper">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Name</th>
+                    <th>Risk</th>
+                    <th>Score</th>
+                    <th>Attendance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in history %}
+                  <tr>
+                    <td>{{ item.timestamp }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.risk_level }}</td>
+                    <td>{{ item.performance_score }}</td>
+                    <td>{{ item.attendance }}%</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="empty-history">No predictions logged yet. Use the add student form to create the first record.</p>
+            {% endif %}
+          </article>
+        </section>
+
+        <div id="dashboardData" data-attendance="{{ result.attendance }}" data-marks="{{ result.marks }}" data-assignments="{{ result.assignments }}" data-study_hours="{{ result.study_hours }}" data-backlogs="{{ result.backlogs }}"></div>
+        {% else %}
+        <section class="empty-state-card">
+          <h3>No student evaluated yet</h3>
+          <p>Use the Add Student page to input details and generate a performance risk analysis.</p>
+          <a class="btn btn-primary" href="/add">Add Student</a>
+        </section>
+        {% endif %}
+      </main>
+    </div>
+    <script src="/static/script.js"></script>
+  </body>
+</html>

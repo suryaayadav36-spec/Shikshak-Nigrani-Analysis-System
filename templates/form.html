@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Student | Shikshak Nigrani & Analysis System</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>Shikshak Nigrani & Analysis System</h1>
+          <p>Performance & Risk Dashboard</p>
+        </div>
+        <nav class="nav-menu">
+          <a class="nav-item" href="/">Home</a>
+          <a class="nav-item active" href="/add">Add Student</a>
+          <a class="nav-item" href="/dashboard">Dashboard</a>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <section class="page-header">
+          <div>
+            <span class="eyebrow">Student intake</span>
+            <h2>Add student performance details</h2>
+            <p>Fill out the information below to calculate the dropout risk and performance score.</p>
+          </div>
+        </section>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+          <div class="flash-banner flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <section class="form-panel">
+          <form id="studentForm" action="/predict" method="POST">
+            <div class="form-grid">
+              <label>
+                <span>Name</span>
+                <input name="name" type="text" placeholder="Enter full name" required />
+              </label>
+              <label>
+                <span>Attendance (%)</span>
+                <input name="attendance" type="number" min="0" max="100" placeholder="0 - 100" required />
+              </label>
+              <label>
+                <span>Internal Marks</span>
+                <input name="marks" type="number" min="0" max="100" placeholder="0 - 100" required />
+              </label>
+              <label>
+                <span>Assignment Completion (%)</span>
+                <input name="assignments" type="number" min="0" max="100" placeholder="0 - 100" required />
+              </label>
+              <label>
+                <span>Number of Backlogs</span>
+                <input name="backlogs" type="number" min="0" max="20" placeholder="0 - 20" required />
+              </label>
+              <label>
+                <span>Study Hours per Week</span>
+                <input name="study_hours" type="number" min="0" max="80" placeholder="0 - 80" required />
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Predict Risk</button>
+          </form>
+          <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loader"></div>
+            <p>Analyzing student performance…</p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="/static/script.js"></script>
+  </body>
+</html>

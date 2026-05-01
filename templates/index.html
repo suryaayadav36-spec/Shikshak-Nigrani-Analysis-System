@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shikshak Nigrani & Analysis System</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>Shikshak Nigrani & Analysis System</h1>
+          <p>Performance & Risk Dashboard</p>
+        </div>
+        <nav class="nav-menu">
+          <a class="nav-item active" href="/">Home</a>
+          <a class="nav-item" href="/add">Add Student</a>
+          <a class="nav-item" href="/dashboard">Dashboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <p>Analyze trends, reduce dropout risk, and support every student.</p>
+        </div>
+      </aside>
+      <main class="main-content">
+        <section class="hero-card">
+          <div>
+            <span class="eyebrow">Smart student analytics</span>
+            <h2>Predict Dropout Risk & Improve Academic Success</h2>
+            <p>
+              Capture student performance data, visualize strengths, and get actionable improvement suggestions from a trained model.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="/add">Add Student</a>
+              <a class="btn btn-secondary" href="/dashboard">View Dashboard</a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="stat-card stat-blue">
+              <h3>88%</h3>
+              <p>Attendance improves prediction accuracy</p>
+            </div>
+            <div class="stat-card stat-purple">
+              <h3>72%</h3>
+              <p>Average performance score across insights</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-grid">
+          <article class="tile-card">
+            <span>Training dataset</span>
+            <h3>{{ summary.rows }} samples</h3>
+            <p>Generated synthetic dataset used for model training.</p>
+          </article>
+          <article class="tile-card">
+            <span>Model type</span>
+            <h3>{{ summary.model_type }}</h3>
+            <p>Reliable logistic regression classifier for dropout risk.</p>
+          </article>
+          <article class="tile-card">
+            <span>Model status</span>
+            <h3>{{ "Ready" if summary.model_ready else "Not trained" }}</h3>
+            <p>Prediction engine {{ "is ready" if summary.model_ready else "needs training" }}.</p>
+          </article>
+          <article class="tile-card">
+            <span>Model accuracy</span>
+            <h3>{% if summary.accuracy is not none %}{{ "%.2f" % (summary.accuracy * 100) }}%{% else %}N/A{% endif %}</h3>
+            <p>Validated accuracy measured on the synthetic test dataset.</p>
+          </article>
+        </section>
+
+        <section class="overview-grid">
+          <article class="info-card">
+            <h3>Fast Evaluation</h3>
+            <p>Enter student metrics and get a risk assessment instantly with a polished, responsive interface.</p>
+          </article>
+          <article class="info-card">
+            <h3>Rule-based Safety</h3>
+            <p>The system applies fallback rules for low attendance and marks to ensure high-risk cases are never missed.</p>
+          </article>
+          <article class="info-card">
+            <h3>Clear Guidance</h3>
+            <p>Every prediction includes an explanation and student-specific suggestions for improvement.</p>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="/static/script.js"></script>
+  </body>
+</html>

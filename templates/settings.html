@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | Shikshak Nigrani & Analysis System</title>
+    <link rel="stylesheet" href="/static/style.css?v=futuristic-bg-27" />
+  </head>
+  <body>
+    <canvas id="bg3d" aria-hidden="true"></canvas>
+    <div class="page-shell">
+      {% set active_page = "settings" %}
+      {% include "_sidebar.html" %}
+      <main class="main-content">
+        <section class="page-header">
+          <div>
+            <span class="eyebrow">System settings</span>
+            <h2>Model and interface status</h2>
+            <p>Review the active model setup and tune evaluator thresholds for demos or viva review.</p>
+          </div>
+        </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+          <div class="flash-banner flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <section class="stats-grid">
+          <article class="tile-card">
+            <span class="card-icon"><i data-lucide="database"></i></span>
+            <span>Dataset</span>
+            <h3>{{ summary.rows }} rows</h3>
+            <p>Training records available to the app.</p>
+          </article>
+          <article class="tile-card">
+            <span class="card-icon"><i data-lucide="brain-circuit"></i></span>
+            <span>Model</span>
+            <h3>{{ summary.model_type }}</h3>
+            <p>Current prediction engine.</p>
+          </article>
+          <article class="tile-card">
+            <span class="card-icon"><i data-lucide="circle-check"></i></span>
+            <span>Status</span>
+            <h3>{{ "Ready" if summary.model_ready else "Not trained" }}</h3>
+            <p>Model availability for predictions.</p>
+          </article>
+          <article class="tile-card">
+            <span class="card-icon"><i data-lucide="gauge"></i></span>
+            <span>Accuracy</span>
+            <h3>{% if summary.accuracy is not none %}{{ "%.2f" % (summary.accuracy * 100) }}%{% else %}N/A{% endif %}</h3>
+            <p>Validation score from the current dataset.</p>
+          </article>
+        </section>
+
+        <section class="model-section">
+          <div>
+            <span class="eyebrow">Interface</span>
+            <h3>Theme control</h3>
+            <p>Choose a visual theme for the dashboard and evaluator review screens.</p>
+          </div>
+          <div class="settings-control-grid">
+            <button class="setting-choice" type="button" data-theme-choice="dark" aria-pressed="false">
+              <i data-lucide="moon"></i>
+              <span>Dark</span>
+            </button>
+            <button class="setting-choice" type="button" data-theme-choice="light" aria-pressed="false">
+              <i data-lucide="sun"></i>
+              <span>Light</span>
+            </button>
+          </div>
+        </section>
+
+        <form class="settings-form" method="POST" action="/settings">
+        <section class="settings-grid">
+          <article class="card settings-card">
+            <span class="card-icon"><i data-lucide="sliders-horizontal"></i></span>
+            <h3>Dashboard preferences</h3>
+            <label class="setting-toggle-row">
+              <span>
+                <strong>Keep action sections open</strong>
+                <small>Show explanations and recommended actions without extra clicks.</small>
+              </span>
+              <input type="checkbox" data-setting-toggle="open-actions" />
+            </label>
+            <label class="setting-toggle-row">
+              <span>
+                <strong>Reduced motion preference</strong>
+                <small>Store a preference for simpler visuals during demos.</small>
+              </span>
+              <input type="checkbox" data-setting-toggle="reduced-motion" />
+            </label>
+          </article>
+
+          <article class="card settings-card">
+            <span class="card-icon"><i data-lucide="target"></i></span>
+            <h3>Risk thresholds</h3>
+            <p>Set the score boundaries your evaluator wants to demonstrate.</p>
+            <div class="settings-list settings-input-list">
+              <label>
+                <span>Low risk max</span>
+                <input name="risk_low_max" type="number" min="5" max="80" value="{{ settings.risk_low_max }}" required />
+              </label>
+              <label>
+                <span>Medium risk max</span>
+                <input name="risk_medium_max" type="number" min="{{ settings.risk_medium_min + 4 }}" max="95" value="{{ settings.risk_medium_max }}" required />
+              </label>
+              <div><span>High risk starts</span><strong data-range-preview="high">{{ settings.risk_high_min }}+</strong></div>
+            </div>
+          </article>
+
+          <article class="card settings-card">
+            <span class="card-icon"><i data-lucide="clipboard-check"></i></span>
+            <h3>Input targets</h3>
+            <p>These targets drive feedback, risk indicators, and improvement suggestions.</p>
+            <div class="settings-list settings-input-list">
+              <label>
+                <span>Attendance target</span>
+                <input name="target_attendance" type="number" min="0" max="100" step="0.1" value="{{ settings.target_attendance }}" required />
+              </label>
+              <label>
+                <span>CPI target</span>
+                <input name="target_cpi" type="number" min="0" max="10" step="0.1" value="{{ settings.target_cpi }}" required />
+              </label>
+              <label>
+                <span>Assignment target</span>
+                <input name="target_assignments" type="number" min="0" max="100" step="0.1" value="{{ settings.target_assignments }}" required />
+              </label>
+              <label>
+                <span>Study hours target</span>
+                <input name="target_study_hours" type="number" min="0" max="80" step="0.5" value="{{ settings.target_study_hours }}" required />
+              </label>
+              <label>
+                <span>Allowed backlogs</span>
+                <input name="target_backlogs" type="number" min="0" max="20" value="{{ settings.target_backlogs }}" required />
+              </label>
+            </div>
+          </article>
+        </section>
+        <section class="settings-save-card card">
+          <div>
+            <span class="eyebrow">Evaluator mode</span>
+            <h3>Save scoring controls</h3>
+            <p>Use stricter values for a tough evaluation or relaxed values for a demo scenario.</p>
+          </div>
+          <div class="settings-actions">
+            <a class="btn btn-secondary" href="/settings"><i data-lucide="rotate-ccw"></i><span>Reset changes</span></a>
+            <button class="btn btn-primary" type="submit"><i data-lucide="save"></i><span>Save settings</span></button>
+          </div>
+        </section>
+        </form>
+      </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/static/script.js?v=futuristic-bg-27"></script>
+  </body>
+</html>

@@ -4,24 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shikshak Nigrani & Analysis System</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/style.css?v=futuristic-bg-27" />
   </head>
   <body>
+    <canvas id="bg3d" aria-hidden="true"></canvas>
     <div class="page-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <h1>Shikshak Nigrani & Analysis System</h1>
-          <p>Performance & Risk Dashboard</p>
-        </div>
-        <nav class="nav-menu">
-          <a class="nav-item active" href="/">Home</a>
-          <a class="nav-item" href="/add">Add Student</a>
-          <a class="nav-item" href="/dashboard">Dashboard</a>
-        </nav>
-        <div class="sidebar-footer">
-          <p>Analyze trends, reduce dropout risk, and support every student.</p>
-        </div>
-      </aside>
+      {% set active_page = "overview" %}
+      {% include "_sidebar.html" %}
       <main class="main-content">
         <section class="hero-card">
           <div>
@@ -31,16 +20,18 @@
               Capture student performance data, visualize strengths, and get actionable improvement suggestions from a trained model.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="/add">Add Student</a>
-              <a class="btn btn-secondary" href="/dashboard">View Dashboard</a>
+              <a class="btn btn-primary" href="/add"><i data-lucide="user-plus"></i><span>Add Student</span></a>
+              <a class="btn btn-secondary" href="/dashboard"><i data-lucide="bar-chart-3"></i><span>View Dashboard</span></a>
             </div>
           </div>
           <div class="hero-visual">
             <div class="stat-card stat-blue">
+              <span class="card-icon"><i data-lucide="activity"></i></span>
               <h3>88%</h3>
               <p>Attendance improves prediction accuracy</p>
             </div>
             <div class="stat-card stat-purple">
+              <span class="card-icon"><i data-lucide="trending-up"></i></span>
               <h3>72%</h3>
               <p>Average performance score across insights</p>
             </div>
@@ -49,37 +40,50 @@
 
         <section class="stats-grid">
           <article class="tile-card">
+            <span class="card-icon"><i data-lucide="database"></i></span>
             <span>Training dataset</span>
             <h3>{{ summary.rows }} samples</h3>
             <p>Generated synthetic dataset used for model training.</p>
           </article>
           <article class="tile-card">
+            <span class="card-icon"><i data-lucide="brain-circuit"></i></span>
             <span>Model type</span>
             <h3>{{ summary.model_type }}</h3>
-            <p>Reliable logistic regression classifier for dropout risk.</p>
+            <p>Class-balanced ensemble classifier for dropout risk.</p>
           </article>
           <article class="tile-card">
+            <span class="card-icon"><i data-lucide="circle-check"></i></span>
             <span>Model status</span>
             <h3>{{ "Ready" if summary.model_ready else "Not trained" }}</h3>
             <p>Prediction engine {{ "is ready" if summary.model_ready else "needs training" }}.</p>
           </article>
           <article class="tile-card">
+            <span class="card-icon"><i data-lucide="gauge"></i></span>
             <span>Model accuracy</span>
             <h3>{% if summary.accuracy is not none %}{{ "%.2f" % (summary.accuracy * 100) }}%{% else %}N/A{% endif %}</h3>
             <p>Validated accuracy measured on the synthetic test dataset.</p>
+          </article>
+          <article class="tile-card">
+            <span class="card-icon"><i data-lucide="shield-check"></i></span>
+            <span>High-risk recall</span>
+            <h3>{% if summary.recall_high_risk is not none %}{{ "%.2f" % (summary.recall_high_risk * 100) }}%{% else %}N/A{% endif %}</h3>
+            <p>Measures how well the model catches students who need intervention.</p>
           </article>
         </section>
 
         <section class="overview-grid">
           <article class="info-card">
+            <span class="card-icon"><i data-lucide="zap"></i></span>
             <h3>Fast Evaluation</h3>
             <p>Enter student metrics and get a risk assessment instantly with a polished, responsive interface.</p>
           </article>
           <article class="info-card">
+            <span class="card-icon"><i data-lucide="shield-alert"></i></span>
             <h3>Rule-based Safety</h3>
-            <p>The system applies fallback rules for low attendance and marks to ensure high-risk cases are never missed.</p>
+            <p>The system applies fallback rules for low attendance, low CPI, and incomplete assignments to keep risk scoring realistic.</p>
           </article>
           <article class="info-card">
+            <span class="card-icon"><i data-lucide="lightbulb"></i></span>
             <h3>Clear Guidance</h3>
             <p>Every prediction includes an explanation and student-specific suggestions for improvement.</p>
           </article>
@@ -90,8 +94,8 @@
             <span class="eyebrow">About model</span>
             <h3>How the prediction works</h3>
             <p>
-              The system uses a Logistic Regression model trained on a synthetic student dataset. It evaluates five inputs:
-              attendance, internal marks, assignment completion, backlogs, and weekly study hours.
+              The system uses a class-balanced Random Forest model trained on a synthetic student dataset. It evaluates five inputs:
+              attendance, CPI, assignment completion, backlogs, and weekly study hours.
             </p>
           </div>
           <div class="model-points">
@@ -102,6 +106,8 @@
         </section>
       </main>
     </div>
-    <script src="/static/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/static/script.js?v=futuristic-bg-27"></script>
   </body>
 </html>

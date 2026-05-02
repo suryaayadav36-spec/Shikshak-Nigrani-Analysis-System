@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>At-Risk Students | Shikshak Nigrani & Analysis System</title>
+    <link rel="stylesheet" href="/static/style.css?v=futuristic-bg-27" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <canvas id="bg3d" aria-hidden="true"></canvas>
+    <div class="page-shell">
+      {% set active_page = "alerts" %}
+      {% include "_sidebar.html" %}
+      <main class="main-content">
+        <section class="page-header">
+          <div>
+            <span class="eyebrow">At-risk monitor</span>
+            <h2>Students needing attention</h2>
+            <p>Medium and high-risk records are grouped here for quick follow-up.</p>
+          </div>
+          <a class="btn btn-primary" href="/add"><i data-lucide="user-plus"></i><span>Add Student</span></a>
+        </section>
+
+        <section class="analytics-board">
+          <article class="card analytics-summary-card">
+            <span class="eyebrow">Alert summary</span>
+            <h3>Follow-up queue</h3>
+            <div class="analytics-stat-grid">
+              <div><span>Total records</span><strong>{{ analytics.total }}</strong></div>
+              <div><span>At-risk</span><strong>{{ at_risk|length }}</strong></div>
+              <div><span>High risk cases</span><strong>{{ analytics.high_risk_count }}</strong></div>
+              <div><span>Avg risk</span><strong>{{ analytics.average_risk }}</strong></div>
+            </div>
+          </article>
+          <article class="card full-card">
+            <h3>Priority guidance</h3>
+            <ul class="suggestions-list">
+              <li>High-risk students should receive mentor follow-up first.</li>
+              <li>Medium-risk students should be monitored for attendance, CPI, and assignment consistency.</li>
+              <li>Use the dashboard after each new prediction to review recent trend changes.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="history-card">
+          <article class="card full-card">
+            <div class="history-header">
+              <h3>At-risk records</h3>
+              <p>Sorted with the latest checked students first.</p>
+            </div>
+            {% if at_risk %}
+            <div class="table-wrapper">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Name</th>
+                    <th>Risk</th>
+                    <th>Risk Score</th>
+                    <th>Performance</th>
+                    <th>Attendance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in at_risk %}
+                  <tr>
+                    <td>{{ item.timestamp }}</td>
+                    <td>{{ item.name }}</td>
+                    <td><span class="risk-badge risk-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td>
+                    <td>{{ item.risk_score }}</td>
+                    <td>{{ item.performance_score }}</td>
+                    <td>{{ item.attendance }}%</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="empty-history">No medium or high-risk students found yet.</p>
+            {% endif %}
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/static/script.js?v=futuristic-bg-27"></script>
+  </body>
+</html>

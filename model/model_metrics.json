@@ -1,0 +1,21 @@
+{
+  "model_type": "Random Forest",
+  "accuracy": 0.9518,
+  "precision_high_risk": 0.9188,
+  "recall_high_risk": 0.9577,
+  "f1_high_risk": 0.9378,
+  "class_distribution": {
+    "0": 4340,
+    "1": 2660
+  },
+  "confusion_matrix": [
+    [
+      988,
+      54
+    ],
+    [
+      27,
+      611
+    ]
+  ]
+}

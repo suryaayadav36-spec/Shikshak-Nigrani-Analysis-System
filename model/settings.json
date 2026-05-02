@@ -1,0 +1,9 @@
+{
+  "risk_low_max": 29,
+  "risk_medium_max": 69,
+  "target_attendance": 75.0,
+  "target_cpi": 6.0,
+  "target_assignments": 80.0,
+  "target_study_hours": 15.0,
+  "target_backlogs": 0
+}

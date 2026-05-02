@@ -1,0 +1,32 @@
+<aside class="sidebar">
+  <div class="brand">
+    <h1><span class="brand-full">Shikshak Nigrani & Analysis System</span><span class="brand-short">SNS</span></h1>
+    <p>Student Risk Monitoring Dashboard</p>
+  </div>
+  <nav class="nav-menu workflow-nav">
+    <span class="nav-group-label">Classroom</span>
+    <a class="nav-item {{ 'active' if active_page == 'overview' else '' }}" href="/">
+      <i data-lucide="home"></i><span>Class Overview</span>
+    </a>
+    <a class="nav-item {{ 'active' if active_page == 'students' else '' }}" href="/add">
+      <i data-lucide="users"></i><span>Student Entry</span>
+    </a>
+
+    <span class="nav-group-label">Teacher Tools</span>
+    <a class="nav-item {{ 'active' if active_page == 'analytics' else '' }}" href="/dashboard">
+      <i data-lucide="bar-chart-3"></i><span>Risk Analytics</span>
+    </a>
+    <a class="nav-item {{ 'active' if active_page == 'alerts' else '' }}" href="/alerts">
+      <i data-lucide="triangle-alert"></i><span>Students at Risk</span>
+    </a>
+
+    <span class="nav-group-label">System</span>
+    <a class="nav-item {{ 'active' if active_page == 'settings' else '' }}" href="/settings">
+      <i data-lucide="settings"></i><span>Settings</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <strong>Quick workflow</strong>
+    <p>Review analytics, check at-risk students, and tune evaluator settings when needed.</p>
+  </div>
+</aside>
